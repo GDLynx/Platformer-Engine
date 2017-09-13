@@ -1,0 +1,111 @@
+<!doctype html> 
+<html> 
+<head> 
+
+</head> 
+<body> 
+<canvas id="game" width="400" height="400"></canvas> 
+</body> 
+<script> 
+
+var canvas = document.getElementById("game"); 
+var ctx = canvas.getContext("2d"); 
+
+var upKeyCode = 38, leftKeyCode = 37, rightKeyCode = 39; 
+
+var ground_y = 300; 
+var player_y = ground_y - 100; 
+var player_currentJumpHeight; 
+var player_jumpHeight = 25; 
+var onGround = false; 
+var grav = 2; 
+var up = false; 
+var left = false, right = false; 
+var jump = false; 
+var x = 120; 
+
+function player() { 
+
+	ctx.beginPath();
+	ctx.rect(x, player_y, 50, 50);
+	ctx.fillStyle = "#FF0000";
+	ctx.fill();
+	ctx.closePath(); 
+	
+	ctx.beginPath();
+	ctx.rect(100, ground_y, 150, 5);
+	ctx.fillStyle = "blue";
+	ctx.fill();
+	ctx.closePath(); 
+	
+	if (!jump && !onGround) { // true 
+		player_y += grav; 
+	} 
+
+	if (player_y == ground_y - 50 && x >= 90 && x <= 220) { // true 
+		player_y == ground_y; 
+		onGround = true; 
+	} else {
+		onGround = false; 
+	} 
+
+	if (up && onGround) { 
+		player_currentJumpHeight = 0; 
+		jump = true; 
+	} 
+
+	if (jump) { 
+		player_currentJumpHeight += 1; 
+		player_y -= grav; 
+	} 
+
+	if (player_currentJumpHeight >= player_jumpHeight) { 
+		jump = false; 
+		player_currentJumpHeight = 0; 
+	} 
+
+	if (left) { 
+		x -= 2; 
+	} 
+	if (right) { 
+		x += 2; 
+	} 
+} 
+
+function main() { 
+	ctx.clearRect(0, 0, canvas.width, canvas.height); 
+	player(); 
+} 
+
+setInterval(main, 20); 
+
+
+/// Input 
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+function keyDownHandler(e) { 
+	if (e.keyCode == upKeyCode) { 
+		up = true; 
+	} 
+	if (e.keyCode == leftKeyCode) { 
+		left = true; 
+	} 
+	if (e.keyCode == rightKeyCode) { 
+		right = true; 
+	} 
+}  
+function keyUpHandler(e) { 
+	if (e.keyCode == upKeyCode) { 
+		up = false; 
+	} 
+	if (e.keyCode == leftKeyCode) { 
+		left = false; 
+	} 
+	if (e.keyCode == rightKeyCode) { 
+		right = false; 
+	} 
+} 
+
+</script> 
+</html> 
